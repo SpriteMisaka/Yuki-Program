@@ -7,6 +7,34 @@
 #define YUKI    "YUKI.N>"
 #define EMPTY   "       "
 
+const char* filename = "text";
+const unsigned char* text = ">これをあなたが読んでいる時、\n\
+わたしはわたしではないだろう。\n\
+\n\
+>このメッセージが表示されたということは、\n\
+そこにはあなた、わたし、涼宮ハルヒ、朝比奈みくる、\n\
+小泉一樹が存在しているはずである。\n\
+\n\
+>それが鍵。\n\
+あなたは解答を見つけ出した。\n\
+\n\
+>これは緊急脱出プログラムである。\n\
+\n\
+起動させる場合はエンターキーを、\n\
+そうでない場合はそれ以外のキーを選択せよ。\n\
+\n\
+起動させた場合、\n\
+あなたは時空修正の機会を得る。\n\
+ただし成功は保証できない。\n\
+また帰還の保証もできない。\n\
+\n\
+>このプログラムが起動するのは一度きりである。\n\
+実行ののち、消去される。\n\
+\n\
+非実行が選択された場合は起動せずに消去される。\n\
+\n\
+Ｒｅａｄｙ？";
+
 void fullscreen() {
     // Get current console window.
     HWND hwnd = GetConsoleWindow();
@@ -25,13 +53,17 @@ void fullscreen() {
     SetWindowLong(hwnd, GWL_STYLE, (l_WinStyle | WS_POPUP | WS_MAXIMIZE) &
         ~WS_CAPTION & ~WS_THICKFRAME & ~WS_BORDER);
     SetWindowPos(hwnd, HWND_TOP, 0, 0, cx, cy, 0);
-} 
+}
 
 int main(void) {
     fullscreen();
     
     FILE* fp;
-    if((fp = fopen("text", "r")) == NULL) exit(0);
+    while ((fp = fopen(filename, "rb")) == NULL) {
+        fp = fopen(filename, "wb+");
+        fputs(text, fp);
+        fclose(fp);
+    }
     
     char ch, prev;
     while((ch = fgetc(fp)) != EOF) {
